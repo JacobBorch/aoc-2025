@@ -140,7 +140,7 @@ fn main() -> Result<()> {{
 mod tests {{
     use super::*;
 
-    const EXAMPLE: &str = include_str!("../../inputs/{day_pad}-example.txt");
+    const EXAMPLE: &str = include_str!("../../../inputs/{day_pad}-example.txt");
 
     #[test]
     fn part1_example() {{
