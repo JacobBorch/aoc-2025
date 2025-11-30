@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/aoc-lib","crates/aoc-tool"]
+members = ["crates/aoc-lib", "crates/aoc-tool"]
 
 resolver = "2"
 
