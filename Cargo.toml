@@ -1,4 +1,4 @@
 [workspace]
-members = []
+members = ["crates/aoc-tool"]
 
 resolver = "2"
