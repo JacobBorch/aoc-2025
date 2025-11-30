@@ -170,7 +170,7 @@ mod tests {{
         println!("Created {}", example_input.display());
     }
 
-    if false && !real_input.exists() {
+    if !real_input.exists() {
         if no_fetch {
             fs::write(&real_input, b"").context("creating empty real input file")?;
             println!("Created empty {}", real_input.display());
