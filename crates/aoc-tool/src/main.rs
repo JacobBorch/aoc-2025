@@ -102,55 +102,59 @@ fn new_day(year: i32, day: u8, no_fetch: bool) -> Result<()> {
         fs::create_dir_all(day_crate_dir.join("src")).context("creating day crate directory")?;
 
         let cargo_toml = format!(
-            r#" [package]
-                name = "{crate_name}"
-                version = "0.1.0"
-                edition = "2024"
+            r#"[package]
+name = "{crate_name}"
+version = "0.1.0"
+edition = "2024"
 
-                [dependencies]
-                aoc-lib = {{ path = "../aoc-lib" }}
-                anyhow = {{ workspace = true }}
-                "#,
+[dependencies]
+aoc-lib = {{ path = "../aoc-lib" }}
+anyhow = {{ workspace = true }}
+"#,
+            crate_name = crate_name,
         );
+
         fs::write(day_crate_dir.join("Cargo.toml"), cargo_toml)
             .context("writing day Cargo.toml")?;
 
         let main_rs = format!(
-            r#" use anyhow::Result;
-                use aoc_lib::read_input;
+            r#"use anyhow::Result;
+use aoc_lib::read_input;
 
-                fn part1(input: &str) -> impl Into<String> {{
-                    todo!()
-                }}
+fn part1(input: &str) -> String {{
+    todo!()
+}}
 
-                fn part2(input: &str) -> impl Into<String> {{
-                    todo!()
-                }}
+fn part2(input: &str) -> String {{
+    todo!()
+}}
 
-                fn main() -> Result<()> {{
-                    let input = read_input({day})?;
-                    println!("Part 1: {{}}", part1(&input));
-                    println!("Part 2: {{}}", part2(&input));
-                    Ok(())
-                }}
+fn main() -> Result<()> {{
+    let input = read_input({day})?;
+    println!("Part 1: {{}}", part1(&input));
+    println!("Part 2: {{}}", part2(&input));
+    Ok(())
+}}
 
-                #[cfg(test)]
-                mod tests {{
-                    use super::*;
+#[cfg(test)]
+mod tests {{
+    use super::*;
 
-                    const EXAMPLE: &str = include_str!("../../inputs/{day_pad}-example.txt");
+    const EXAMPLE: &str = include_str!("../../inputs/{day_pad}-example.txt");
 
-                    #[test]
-                    fn part1_example() {{
-                        assert_eq!(part1(EXAMPLE), 0);
-                    }}
+    #[test]
+    fn part1_example() {{
+        assert_eq!(part1(EXAMPLE), "TODO");
+    }}
 
-                    #[test]
-                    fn part2_example() {{
-                        assert_eq!(part2(EXAMPLE), 0);
-                    }}
-                }}
-                "#
+    #[test]
+    fn part2_example() {{
+        assert_eq!(part2(EXAMPLE), "TODO");
+    }}
+}}
+"#,
+            day = day,
+            day_pad = day_pad,
         );
 
         fs::write(day_crate_dir.join("src/main.rs"), main_rs).context("writing day main.rs")?;
@@ -190,9 +194,8 @@ fn new_day(year: i32, day: u8, no_fetch: bool) -> Result<()> {
         if let Some(idx) = workspace_toml.find(needle) {
             let start = idx + needle.len();
             if let Some(end) = workspace_toml[start..].find(']') {
-                // insert before closing ]
                 let insert_pos = start + end;
-                let to_insert = format!("\n    \"crates/{crate_name}\",");
+                let to_insert = format!(",\n    \"crates/{crate_name}\"");
                 workspace_toml.insert_str(insert_pos, &to_insert);
             } else {
                 bail!("Could not find closing ] for workspace members");
