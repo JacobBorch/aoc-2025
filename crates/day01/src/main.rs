@@ -1,11 +1,44 @@
+use core::num;
+
 use anyhow::Result;
 use aoc_lib::read_input;
 
-fn part1(input: &str) -> String {
-    todo!()
+fn parse_cmd(input: &str) -> (char, u32) {
+    let mut chars = input.chars();
+
+    let letter = chars.next().unwrap();
+
+    let digits: String = chars.collect();
+
+    let number = digits.parse::<u32>().unwrap();
+    (letter, number)
 }
 
-fn part2(input: &str) -> String {
+fn part1(input: &str) -> u32 {
+    let pairs: Vec<(char, u32)> = input.lines().map(parse_cmd).collect();
+    let mut times = 0;
+    let mut position: i32 = 50;
+    for (direction, number) in pairs {
+        match direction {
+            'L' => {
+                position -= number as i32;
+            }
+            'R' => {
+                position += number as i32;
+            }
+            _ => unreachable!(),
+        }
+        position = aoc_lib::modulo(position, 100);
+        dbg!("Position: {}", position);
+
+        if position == 0 {
+            times += 1;
+        }
+    }
+    times
+}
+
+fn part2(input: &str) -> u32 {
     todo!()
 }
 
@@ -24,11 +57,11 @@ mod tests {
 
     #[test]
     fn part1_example() {
-        assert_eq!(part1(EXAMPLE), "TODO");
+        assert_eq!(part1(EXAMPLE), 3);
     }
 
     #[test]
     fn part2_example() {
-        assert_eq!(part2(EXAMPLE), "TODO");
+        assert_eq!(part2(EXAMPLE), 0);
     }
 }
