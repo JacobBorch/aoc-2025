@@ -45,7 +45,7 @@ fn part2(input: &str) -> String {
 }
 
 fn main() -> Result<()> {
-    let input = read_input(1)?;
+    let input = include_str!("../../../inputs/01.txt");
     println!("Part 1: {}", part1(&input));
     println!("Part 2: {}", part2(&input));
     Ok(())
