@@ -14,7 +14,7 @@ fn parse_cmd(input: &str) -> (char, u32) {
     (letter, number)
 }
 
-fn part1(input: &str) -> u32 {
+fn solve(input: &str) -> u32 {
     let pairs: Vec<(char, u32)> = input.lines().map(parse_cmd).collect();
     let mut times = 0;
     let mut position: i32 = 50;
@@ -29,8 +29,6 @@ fn part1(input: &str) -> u32 {
             _ => unreachable!(),
         }
         position = aoc_lib::modulo(position, 100);
-        dbg!("Position: {}", position);
-
         if position == 0 {
             times += 1;
         }
@@ -38,8 +36,37 @@ fn part1(input: &str) -> u32 {
     times
 }
 
+fn solve2(input: &str) -> u32 {
+    let pairs: Vec<(char, u32)> = input.lines().map(parse_cmd).collect();
+    let mut times = 0;
+    let mut position: i32 = 50;
+    for (direction, mut number) in pairs {
+        while number > 0 {
+            match direction {
+                'L' => {
+                    position -= 1;
+                }
+                'R' => {
+                    position += 1;
+                }
+                _ => unreachable!(),
+            }
+            position = aoc_lib::modulo(position, 100);
+            if position == 0 {
+                times += 1;
+            }
+            number -= 1;
+        }
+    }
+    times
+}
+
+fn part1(input: &str) -> u32 {
+    solve(input)
+}
+
 fn part2(input: &str) -> u32 {
-    todo!()
+    solve2(input)
 }
 
 fn main() -> Result<()> {
@@ -62,6 +89,6 @@ mod tests {
 
     #[test]
     fn part2_example() {
-        assert_eq!(part2(EXAMPLE), 0);
+        assert_eq!(part2(EXAMPLE), 6);
     }
 }
