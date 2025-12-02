@@ -1,5 +1,4 @@
 use anyhow::Result;
-use aoc_lib::read_input;
 
 fn parse(line: &str) -> (&str, &str) {
     let mut nums = line.split("-");

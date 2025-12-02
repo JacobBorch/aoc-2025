@@ -130,7 +130,7 @@ fn part2(input: &str) -> String {{
 }}
 
 fn main() -> Result<()> {{
-    let input = read_input({day})?;
+    let input = include_str!("../../../inputs/{day_pad}.txt");
     println!("Part 1: {{}}", part1(&input));
     println!("Part 2: {{}}", part2(&input));
     Ok(())
@@ -153,7 +153,6 @@ mod tests {{
     }}
 }}
 "#,
-            day = day,
             day_pad = day_pad,
         );
 
