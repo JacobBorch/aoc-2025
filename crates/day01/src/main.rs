@@ -1,7 +1,6 @@
 use std::iter;
 
 use anyhow::Result;
-use aoc_lib::read_input;
 
 fn parse_cmd(input: &str) -> (char, i32) {
     let mut chars = input.chars();
