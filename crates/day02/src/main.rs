@@ -21,20 +21,16 @@ fn solve<F>(input: &str, f: F) -> usize
 where
     F: Fn(&str) -> bool,
 {
-    let pairs: Vec<(&str, &str)> = input.split(",").map(parse).collect();
-    let mut total: usize = 0;
-    for (a, b) in pairs {
-        let mut from = a.parse::<usize>().unwrap();
-        let to = b.parse::<usize>().unwrap();
-        while from <= to {
-            let s = from.to_string();
-            if f(&s) {
-                total += from;
-            }
-            from += 1;
-        }
-    }
-    total
+    input
+        .split(',')
+        .map(parse)
+        .flat_map(|(start, end)| {
+            let start = start.parse::<usize>().unwrap();
+            let end = end.parse::<usize>().unwrap();
+            start..=end
+        })
+        .filter(|&num| f(&num.to_string()))
+        .sum()
 }
 
 fn part1(input: &str) -> String {
