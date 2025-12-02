@@ -22,29 +22,20 @@ fn solve(input: &str) -> usize {
         .count()
 }
 
-fn solve2(input: &str) -> u32 {
-    let pairs: Vec<(char, i32)> = input.lines().map(parse_cmd).collect();
-    let mut times = 0;
-    let mut position: i32 = 50;
-    for (direction, mut number) in pairs {
-        while number > 0 {
-            match direction {
-                'L' => {
-                    position -= 1;
-                }
-                'R' => {
-                    position += 1;
-                }
-                _ => unreachable!(),
-            }
-            position = aoc_lib::modulo(position, 100);
-            if position == 0 {
-                times += 1;
-            }
-            number -= 1;
-        }
-    }
-    times
+fn solve2(input: &str) -> usize {
+    input
+        .lines()
+        .map(parse_cmd)
+        .flat_map(|(dir, dist)| {
+            let step = if dir == 'R' { 1 } else { -1 };
+            std::iter::repeat(step).take(dist as usize)
+        })
+        .scan(50, |pos, step| {
+            *pos = aoc_lib::modulo(*pos + step, 100);
+            Some(*pos)
+        })
+        .filter(|&pos| pos == 0)
+        .count()
 }
 
 fn part1(input: &str) -> String {
