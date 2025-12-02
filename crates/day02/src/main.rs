@@ -6,7 +6,7 @@ fn parse(line: &str) -> (&str, &str) {
     (nums.next().unwrap(), nums.next().unwrap())
 }
 
-fn is_invalid(id: &str) -> bool {
+fn is_invalid_part1(id: &str) -> bool {
     if id.len() % 2 != 0 {
         return false;
     }
@@ -16,16 +16,43 @@ fn is_invalid(id: &str) -> bool {
     a == b
 }
 
-fn solve(input: &str) -> usize {
+fn is_invalid_part2(id: &str) -> bool {
+    let len = id.len();
+    for i in 1..=(len / 2) {
+        if len % i != 0 {
+            continue;
+        }
+        let slice = &id[..i];
+        let mut found = false;
+        for j in 1..(len / i) {
+            let start = j * i;
+            let end = start + i;
+            let other = &id[start..end];
+
+            if slice != other {
+                found = true;
+                break;
+            }
+        }
+        if !found {
+            return true;
+        }
+    }
+    false
+}
+
+fn solve<F>(input: &str, f: F) -> usize
+where
+    F: Fn(&str) -> bool,
+{
     let pairs: Vec<(&str, &str)> = input.split(",").map(parse).collect();
     let mut total: usize = 0;
     for (a, b) in pairs {
-        println!("a: {}, b: {}", a, b);
         let mut from = a.parse::<usize>().unwrap();
         let to = b.parse::<usize>().unwrap();
         while from <= to {
             let s = from.to_string();
-            if is_invalid(&s) {
+            if f(&s) {
                 total += from;
             }
             from += 1;
@@ -35,11 +62,11 @@ fn solve(input: &str) -> usize {
 }
 
 fn part1(input: &str) -> String {
-    solve(input).to_string()
+    solve(input, is_invalid_part1).to_string()
 }
 
 fn part2(input: &str) -> String {
-    todo!()
+    solve(input, is_invalid_part2).to_string()
 }
 
 fn main() -> Result<()> {
@@ -62,6 +89,6 @@ mod tests {
 
     #[test]
     fn part2_example() {
-        assert_eq!(part2(EXAMPLE), "TODO");
+        assert_eq!(part2(EXAMPLE), "4174379265");
     }
 }
