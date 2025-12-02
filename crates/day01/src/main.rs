@@ -1,5 +1,3 @@
-use core::num;
-
 use anyhow::Result;
 use aoc_lib::read_input;
 
