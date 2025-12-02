@@ -16,28 +16,10 @@ fn is_invalid_part1(id: &str) -> bool {
 }
 
 fn is_invalid_part2(id: &str) -> bool {
-    let len = id.len();
-    for i in 1..=(len / 2) {
-        if len % i != 0 {
-            continue;
-        }
-        let slice = &id[..i];
-        let mut found = false;
-        for j in 1..(len / i) {
-            let start = j * i;
-            let end = start + i;
-            let other = &id[start..end];
+    let bytes = id.as_bytes();
+    let len = bytes.len();
 
-            if slice != other {
-                found = true;
-                break;
-            }
-        }
-        if !found {
-            return true;
-        }
-    }
-    false
+    (1..=len / 2).any(|i| len % i == 0 && bytes.chunks(i).all(|chunk| chunk == &bytes[..i]))
 }
 
 fn solve<F>(input: &str, f: F) -> usize
