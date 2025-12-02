@@ -3,35 +3,29 @@ use aoc_lib::read_input;
 
 fn parse_cmd(input: &str) -> (char, u32) {
     let mut chars = input.chars();
-
     let letter = chars.next().unwrap();
-
     let digits: String = chars.collect();
-
     let number = digits.parse::<u32>().unwrap();
     (letter, number)
 }
 
-fn solve(input: &str) -> u32 {
-    let pairs: Vec<(char, u32)> = input.lines().map(parse_cmd).collect();
-    let mut times = 0;
-    let mut position: i32 = 50;
-    for (direction, number) in pairs {
-        match direction {
-            'L' => {
-                position -= number as i32;
+fn solve(input: &str) -> usize {
+    input
+        .lines()
+        .map(parse_cmd)
+        .map(|(dir, num)| {
+            if dir == 'R' {
+                num as i32
+            } else {
+                -(num as i32)
             }
-            'R' => {
-                position += number as i32;
-            }
-            _ => unreachable!(),
-        }
-        position = aoc_lib::modulo(position, 100);
-        if position == 0 {
-            times += 1;
-        }
-    }
-    times
+        })
+        .scan(50, |pos, move_amount| {
+            *pos = aoc_lib::modulo(*pos + move_amount, 100);
+            Some(*pos)
+        })
+        .filter(|&pos| pos == 0)
+        .count()
 }
 
 fn solve2(input: &str) -> u32 {
@@ -59,12 +53,12 @@ fn solve2(input: &str) -> u32 {
     times
 }
 
-fn part1(input: &str) -> u32 {
-    solve(input)
+fn part1(input: &str) -> String {
+    solve(input).to_string()
 }
 
-fn part2(input: &str) -> u32 {
-    solve2(input)
+fn part2(input: &str) -> String {
+    solve2(input).to_string()
 }
 
 fn main() -> Result<()> {
@@ -82,11 +76,11 @@ mod tests {
 
     #[test]
     fn part1_example() {
-        assert_eq!(part1(EXAMPLE), 3);
+        assert_eq!(part1(EXAMPLE), "3");
     }
 
     #[test]
     fn part2_example() {
-        assert_eq!(part2(EXAMPLE), 6);
+        assert_eq!(part2(EXAMPLE), "6");
     }
 }
