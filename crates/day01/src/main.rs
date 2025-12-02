@@ -1,3 +1,5 @@
+use std::iter;
+
 use anyhow::Result;
 use aoc_lib::read_input;
 
@@ -9,27 +11,15 @@ fn parse_cmd(input: &str) -> (char, i32) {
     (letter, number)
 }
 
-fn solve(input: &str) -> usize {
+fn solve<F, I>(input: &str, generator: F) -> usize
+where
+    F: Fn((char, i32)) -> I,
+    I: Iterator<Item = i32>,
+{
     input
         .lines()
         .map(parse_cmd)
-        .map(|(dir, num)| if dir == 'R' { num } else { -num })
-        .scan(50, |pos, move_amount| {
-            *pos = aoc_lib::modulo(*pos + move_amount, 100);
-            Some(*pos)
-        })
-        .filter(|&pos| pos == 0)
-        .count()
-}
-
-fn solve2(input: &str) -> usize {
-    input
-        .lines()
-        .map(parse_cmd)
-        .flat_map(|(dir, dist)| {
-            let step = if dir == 'R' { 1 } else { -1 };
-            std::iter::repeat(step).take(dist as usize)
-        })
+        .flat_map(generator)
         .scan(50, |pos, step| {
             *pos = aoc_lib::modulo(*pos + step, 100);
             Some(*pos)
@@ -39,11 +29,19 @@ fn solve2(input: &str) -> usize {
 }
 
 fn part1(input: &str) -> String {
-    solve(input).to_string()
+    solve(input, |(dir, num)| {
+        let val = if dir == 'R' { num } else { -num };
+        iter::once(val)
+    })
+    .to_string()
 }
 
 fn part2(input: &str) -> String {
-    solve2(input).to_string()
+    solve(input, |(dir, num)| {
+        let val = if dir == 'R' { 1 } else { -1 };
+        iter::repeat(val).take(num as usize)
+    })
+    .to_string()
 }
 
 fn main() -> Result<()> {
