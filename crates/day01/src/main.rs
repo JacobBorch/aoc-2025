@@ -1,11 +1,11 @@
 use anyhow::Result;
 use aoc_lib::read_input;
 
-fn parse_cmd(input: &str) -> (char, u32) {
+fn parse_cmd(input: &str) -> (char, i32) {
     let mut chars = input.chars();
     let letter = chars.next().unwrap();
     let digits: String = chars.collect();
-    let number = digits.parse::<u32>().unwrap();
+    let number = digits.parse::<i32>().unwrap();
     (letter, number)
 }
 
@@ -13,13 +13,7 @@ fn solve(input: &str) -> usize {
     input
         .lines()
         .map(parse_cmd)
-        .map(|(dir, num)| {
-            if dir == 'R' {
-                num as i32
-            } else {
-                -(num as i32)
-            }
-        })
+        .map(|(dir, num)| if dir == 'R' { num } else { -num })
         .scan(50, |pos, move_amount| {
             *pos = aoc_lib::modulo(*pos + move_amount, 100);
             Some(*pos)
@@ -29,7 +23,7 @@ fn solve(input: &str) -> usize {
 }
 
 fn solve2(input: &str) -> u32 {
-    let pairs: Vec<(char, u32)> = input.lines().map(parse_cmd).collect();
+    let pairs: Vec<(char, i32)> = input.lines().map(parse_cmd).collect();
     let mut times = 0;
     let mut position: i32 = 50;
     for (direction, mut number) in pairs {
