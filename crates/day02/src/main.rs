@@ -6,13 +6,8 @@ fn parse(line: &str) -> (&str, &str) {
 }
 
 fn is_invalid_part1(id: &str) -> bool {
-    if id.len() % 2 != 0 {
-        return false;
-    }
-    let mid = id.len() / 2;
-    let a = &id[..mid];
-    let b = &id[mid..];
-    a == b
+    let middle = id.len() / 2;
+    id.len() % 2 == 0 && id[..middle] == id[middle..]
 }
 
 fn is_invalid_part2(id: &str) -> bool {
