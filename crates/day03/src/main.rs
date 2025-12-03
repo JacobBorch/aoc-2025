@@ -1,19 +1,25 @@
 use anyhow::Result;
 
-fn get_joltage(batteries: Vec<usize>) -> usize {
+fn get_joltage(batteries: Vec<usize>, num_length: usize) -> usize {
+    if num_length == 1 {
+        return batteries.into_iter().max().unwrap();
+    }
     let (idx_max, max) = batteries
         .iter()
-        .take(batteries.len() - 1)
+        .take(batteries.len() - num_length + 1)
         .enumerate()
-        .rev() //Make sure we get the first occurence of max and not the last
+        .rev()
         .max_by_key(|&(_, v)| v)
         .unwrap();
 
-    let second = *batteries.iter().skip(idx_max + 1).max().unwrap();
-    10 * max + second
+    10usize.pow((num_length - 1) as u32) * max
+        + get_joltage(
+            batteries.into_iter().skip(idx_max + 1).collect(),
+            num_length - 1,
+        )
 }
 
-fn solve(input: &str) -> usize {
+fn solve<F: Fn(Vec<usize>) -> usize>(input: &str, f: F) -> usize {
     input
         .lines()
         .map(|line| {
@@ -21,16 +27,16 @@ fn solve(input: &str) -> usize {
                 .map(|c| c.to_string().parse::<usize>().unwrap())
                 .collect::<Vec<_>>()
         })
-        .map(get_joltage)
+        .map(f)
         .sum()
 }
 
 fn part1(input: &str) -> String {
-    solve(input).to_string()
+    solve(input, |vec| get_joltage(vec, 2)).to_string()
 }
 
 fn part2(input: &str) -> String {
-    todo!()
+    solve(input, |vec| get_joltage(vec, 12)).to_string()
 }
 
 fn main() -> Result<()> {
@@ -53,6 +59,6 @@ mod tests {
 
     #[test]
     fn part2_example() {
-        assert_eq!(part2(EXAMPLE), "TODO");
+        assert_eq!(part2(EXAMPLE), "3121910778619");
     }
 }
