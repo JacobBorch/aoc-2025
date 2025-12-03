@@ -1,7 +1,28 @@
 use anyhow::Result;
 
+fn get_joltage(batteries: Vec<usize>) -> usize {
+    let (idx_max, max) = batteries
+        .iter()
+        .take(batteries.len() - 1)
+        .enumerate()
+        .rev() //Make sure we get the first occurence of max and not the last
+        .max_by_key(|&(_, v)| v)
+        .unwrap();
+
+    let second = *batteries.iter().skip(idx_max + 1).max().unwrap();
+    10 * max + second
+}
+
 fn solve(input: &str) -> usize {
-    todo!()
+    input
+        .lines()
+        .map(|line| {
+            line.chars()
+                .map(|c| c.to_string().parse::<usize>().unwrap())
+                .collect::<Vec<_>>()
+        })
+        .map(get_joltage)
+        .sum()
 }
 
 fn part1(input: &str) -> String {
