@@ -1,8 +1,11 @@
 use anyhow::Result;
-use aoc_lib::read_input;
+
+fn solve(input: &str) -> usize {
+    todo!()
+}
 
 fn part1(input: &str) -> String {
-    todo!()
+    solve(input).to_string()
 }
 
 fn part2(input: &str) -> String {
@@ -24,7 +27,7 @@ mod tests {
 
     #[test]
     fn part1_example() {
-        assert_eq!(part1(EXAMPLE), "TODO");
+        assert_eq!(part1(EXAMPLE), "357");
     }
 
     #[test]

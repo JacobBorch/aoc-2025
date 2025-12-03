@@ -119,7 +119,6 @@ anyhow = {{ workspace = true }}
 
         let main_rs = format!(
             r#"use anyhow::Result;
-use aoc_lib::read_input;
 
 fn part1(input: &str) -> String {{
     todo!()
