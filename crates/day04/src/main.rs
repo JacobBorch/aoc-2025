@@ -6,7 +6,7 @@ fn solve(input: &str) -> usize {
     graph
         .iter()
         .filter(|&(_, c)| c == '@')
-        .filter(|&(pos, c)| graph.neighbors(pos).filter(|&c| c == '@').count() < 4)
+        .filter(|&(pos, _)| graph.neighbors(pos).filter(|&c| c == '@').count() < 4)
         .count()
 }
 
