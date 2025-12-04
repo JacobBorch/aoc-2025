@@ -14,19 +14,19 @@ fn solve(input: &str) -> usize {
 }
 
 fn solve_part2(input: &str) -> usize {
-    let mut count = 0;
     let mut grid = Grid::from(input);
-    loop {
-        let removable_rolls = find_removable_rolls(&grid);
-        if removable_rolls.len() == 0 {
-            break;
+
+    std::iter::from_fn(|| {
+        let removable = find_removable_rolls(&grid);
+        if removable.is_empty() {
+            return None;
         }
-        count += removable_rolls.len();
-        for (pos, _) in removable_rolls {
+        for (pos, _) in &removable {
             grid.grid[pos.y as usize][pos.x as usize] = '.';
         }
-    }
-    count
+        Some(removable.len())
+    })
+    .sum()
 }
 
 fn part1(input: &str) -> String {
