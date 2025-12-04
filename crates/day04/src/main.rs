@@ -1,7 +1,17 @@
 use anyhow::Result;
+use aoc_lib::Grid;
+
+fn solve(input: &str) -> usize {
+    let graph = Grid::from(input);
+    graph
+        .iter()
+        .filter(|&(_, c)| c == '@')
+        .filter(|&(pos, c)| graph.neighbors(pos).filter(|&c| c == '@').count() < 4)
+        .count()
+}
 
 fn part1(input: &str) -> String {
-    todo!()
+    solve(input).to_string()
 }
 
 fn part2(input: &str) -> String {
@@ -23,7 +33,7 @@ mod tests {
 
     #[test]
     fn part1_example() {
-        assert_eq!(part1(EXAMPLE), "TODO");
+        assert_eq!(part1(EXAMPLE), "13");
     }
 
     #[test]
