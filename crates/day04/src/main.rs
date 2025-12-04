@@ -1,13 +1,32 @@
 use anyhow::Result;
-use aoc_lib::Grid;
+use aoc_lib::{Grid, Position};
+
+fn find_removable_rolls(grid: &Grid) -> Vec<(Position, char)> {
+    grid.iter()
+        .filter(|&(_, c)| c == '@')
+        .filter(|&(pos, _)| grid.neighbors(pos).filter(|&c| c == '@').count() < 4)
+        .collect()
+}
 
 fn solve(input: &str) -> usize {
-    let graph = Grid::from(input);
-    graph
-        .iter()
-        .filter(|&(_, c)| c == '@')
-        .filter(|&(pos, _)| graph.neighbors(pos).filter(|&c| c == '@').count() < 4)
-        .count()
+    let grid = Grid::from(input);
+    find_removable_rolls(&grid).len()
+}
+
+fn solve_part2(input: &str) -> usize {
+    let mut count = 0;
+    let mut grid = Grid::from(input);
+    loop {
+        let removable_rolls = find_removable_rolls(&grid);
+        if removable_rolls.len() == 0 {
+            break;
+        }
+        count += removable_rolls.len();
+        for (pos, _) in removable_rolls {
+            grid.grid[pos.y as usize][pos.x as usize] = '.';
+        }
+    }
+    count
 }
 
 fn part1(input: &str) -> String {
@@ -15,7 +34,7 @@ fn part1(input: &str) -> String {
 }
 
 fn part2(input: &str) -> String {
-    todo!()
+    solve_part2(input).to_string()
 }
 
 fn main() -> Result<()> {
@@ -38,6 +57,6 @@ mod tests {
 
     #[test]
     fn part2_example() {
-        assert_eq!(part2(EXAMPLE), "TODO");
+        assert_eq!(part2(EXAMPLE), "43");
     }
 }
