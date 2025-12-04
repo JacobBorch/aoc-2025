@@ -13,7 +13,7 @@ pub struct Grid {
 }
 
 impl Grid {
-    pub fn iter(&self) -> impl Iterator<Item = (Position, char)> + '_ {
+    pub fn iter(&self) -> impl Iterator<Item = (Position, char)> {
         self.grid.iter().enumerate().flat_map(|(y, row)| {
             row.iter()
                 .enumerate()
@@ -21,7 +21,7 @@ impl Grid {
         })
     }
 
-    pub fn neighbors<T: Into<Position>>(&self, pos: T) -> impl Iterator<Item = char> + '_ {
+    pub fn neighbors<T: Into<Position>>(&self, pos: T) -> impl Iterator<Item = char> {
         let position = pos.into();
         OFFSETS.iter().filter_map(move |o| {
             let nx = position.x + o.x;
