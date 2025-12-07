@@ -2,7 +2,8 @@
 members = ["crates/aoc-lib", "crates/aoc-tool", "crates/day01", "crates/day02",
     "crates/day03",
     "crates/day04",
-    "crates/day05"]
+    "crates/day05",
+    "crates/day06"]
 
 resolver = "2"
 
