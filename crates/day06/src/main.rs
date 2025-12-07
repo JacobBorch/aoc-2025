@@ -1,7 +1,52 @@
+use std::ops::{Add, Mul};
+
 use anyhow::Result;
+use aoc_lib::Grid;
+
+fn parse_numbers(input: &str) -> Vec<Vec<usize>> {
+    input
+        .lines()
+        .take_while(|l| !l.contains(['*', '+']))
+        .map(|line| {
+            line.split_whitespace()
+                .filter_map(|s| s.parse::<usize>().ok())
+                .collect()
+        })
+        .collect()
+}
+
+fn parse_operators(input: &str) -> Vec<char> {
+    input
+        .lines()
+        .last()
+        .unwrap()
+        .replace(" ", "")
+        .chars()
+        .collect()
+}
+
+fn solve(input: &str) -> usize {
+    let numbers = parse_numbers(input);
+    let operators = parse_operators(input);
+    println!("{:?}", numbers);
+    println!("{:?}", operators);
+
+    let mut sum = 0;
+
+    for (x, &op) in operators.iter().enumerate() {
+        let col_iter = numbers
+            .iter()
+            .filter_map(move |row: &Vec<usize>| row.get(x).copied());
+
+        let reduce_func = if op == '*' { Mul::mul } else { Add::add };
+        sum += col_iter.reduce(reduce_func).unwrap();
+    }
+
+    sum
+}
 
 fn part1(input: &str) -> String {
-    todo!()
+    solve(input).to_string()
 }
 
 fn part2(input: &str) -> String {
@@ -23,7 +68,7 @@ mod tests {
 
     #[test]
     fn part1_example() {
-        assert_eq!(part1(EXAMPLE), "TODO");
+        assert_eq!(part1(EXAMPLE), "4277556");
     }
 
     #[test]

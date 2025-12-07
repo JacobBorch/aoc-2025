@@ -40,6 +40,18 @@ impl Grid {
             .get(pos.x as usize)
             .map(|c| *c)
     }
+
+    pub fn row(&self, y: usize) -> Option<impl Iterator<Item = char>> {
+        self.grid.get(y).map(|row| row.iter().map(|c| *c))
+    }
+
+    pub fn column(&self, x: usize) -> Option<impl Iterator<Item = char> + '_> {
+        if x >= self.grid[0].len() {
+            return None;
+        }
+
+        Some(self.grid.iter().filter_map(move |row| row.get(x).copied()))
+    }
 }
 
 impl From<&str> for Grid {
