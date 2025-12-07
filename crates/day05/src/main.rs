@@ -18,27 +18,26 @@ fn parse_ids(input: &str) -> Vec<usize> {
     input.lines().filter_map(|s| s.parse().ok()).collect()
 }
 
-fn merge_ranges(mut input_ranges: Vec<RangeInclusive<usize>>) -> Vec<RangeInclusive<usize>> {
-    let mut output: Vec<RangeInclusive<usize>> = Vec::new();
-    input_ranges.sort_by(|r1, r2| r1.start().cmp(r2.start()));
-    let mut current_opt = None;
-    for range in &input_ranges {
-        if current_opt.is_none() {
-            current_opt = Some((range.start(), range.end()));
-            continue;
-        }
-        let current = current_opt.unwrap();
-        if range.start() <= current.1 {
-            current_opt = Some((current.0.min(range.start()), current.1.max(range.end())));
-            continue;
-        }
-        output.push(*current.0..=*current.1);
-        current_opt = Some((range.start(), range.end()));
+pub fn merge_ranges(mut ranges: Vec<RangeInclusive<usize>>) -> Vec<RangeInclusive<usize>> {
+    if ranges.is_empty() {
+        return Vec::new();
     }
-    if let Some((&a, &b)) = current_opt {
-        output.push(a..=b);
-    }
-    output
+
+    ranges.sort_by_key(|r| *r.start());
+
+    ranges.into_iter().fold(Vec::new(), |mut acc, range| {
+        if let Some(last) = acc.last_mut() {
+            if range.start() <= last.end() {
+                let new_end = last.end().max(range.end());
+                let new_start = last.start();
+                *last = *new_start..=*new_end;
+                return acc;
+            }
+        }
+
+        acc.push(range);
+        acc
+    })
 }
 
 fn solve(input: &str) -> usize {
