@@ -52,7 +52,7 @@ fn parse_operators(input: &str) -> Vec<char> {
         .collect()
 }
 
-fn temp_solve(input: &str, numbers: Vec<Vec<usize>>) -> usize {
+fn solve(input: &str, numbers: Vec<Vec<usize>>) -> usize {
     let operators = parse_operators(input);
     numbers
         .into_iter()
@@ -65,11 +65,11 @@ fn temp_solve(input: &str, numbers: Vec<Vec<usize>>) -> usize {
 }
 
 fn part1(input: &str) -> String {
-    temp_solve(input, parse_numbers_part1(input)).to_string()
+    solve(input, parse_numbers_part1(input)).to_string()
 }
 
 fn part2(input: &str) -> String {
-    temp_solve(input, parse_numbers_part2(input)).to_string()
+    solve(input, parse_numbers_part2(input)).to_string()
 }
 
 fn main() -> Result<()> {
