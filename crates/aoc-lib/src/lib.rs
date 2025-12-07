@@ -97,3 +97,12 @@ pub const OFFSETS: [Position; 8] = [
     pos(1, 0),
     pos(1, 1),
 ];
+
+pub fn transpose<T: Copy>(rows: Vec<Vec<T>>) -> Vec<Vec<T>> {
+    let cols = rows[0].len();
+    let rows_count = rows.len();
+
+    (0..cols)
+        .map(|c| (0..rows_count).map(|r| rows[r][c]).collect())
+        .collect()
+}

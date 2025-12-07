@@ -1,10 +1,10 @@
 use std::ops::{Add, Mul};
 
 use anyhow::Result;
-use aoc_lib::Grid;
+use aoc_lib::{Grid, transpose};
 
-fn parse_numbers(input: &str) -> Vec<Vec<usize>> {
-    input
+fn parse_numbers_part1(input: &str) -> Vec<Vec<usize>> {
+    let lines = input
         .lines()
         .take_while(|l| !l.contains(['*', '+']))
         .map(|line| {
@@ -12,7 +12,34 @@ fn parse_numbers(input: &str) -> Vec<Vec<usize>> {
                 .filter_map(|s| s.parse::<usize>().ok())
                 .collect()
         })
-        .collect()
+        .collect();
+    transpose(lines)
+}
+
+fn parse_numbers_part2(input: &str) -> Vec<Vec<usize>> {
+    let grid = Grid::from(input);
+    let mut output = Vec::new();
+
+    let mut tmp = Vec::new();
+    for x in 0..grid.grid[0].len() {
+        let col_iter = grid.column(x).unwrap();
+        let num = col_iter
+            .skip_while(|c| !c.is_numeric())
+            .take_while(|c| c.is_numeric())
+            .collect::<String>()
+            .parse();
+
+        if num.is_err() {
+            output.push(tmp);
+            tmp = Vec::new();
+            continue;
+        }
+
+        tmp.push(num.unwrap());
+    }
+    output.push(tmp);
+
+    output
 }
 
 fn parse_operators(input: &str) -> Vec<char> {
@@ -25,32 +52,24 @@ fn parse_operators(input: &str) -> Vec<char> {
         .collect()
 }
 
-fn solve(input: &str) -> usize {
-    let numbers = parse_numbers(input);
+fn temp_solve(input: &str, numbers: Vec<Vec<usize>>) -> usize {
     let operators = parse_operators(input);
-    println!("{:?}", numbers);
-    println!("{:?}", operators);
-
-    let mut sum = 0;
-
-    for (x, &op) in operators.iter().enumerate() {
-        let col_iter = numbers
-            .iter()
-            .filter_map(move |row: &Vec<usize>| row.get(x).copied());
-
-        let reduce_func = if op == '*' { Mul::mul } else { Add::add };
-        sum += col_iter.reduce(reduce_func).unwrap();
-    }
-
-    sum
+    numbers
+        .into_iter()
+        .zip(operators.into_iter())
+        .filter_map(|(row, op)| {
+            let reduce_func = if op == '*' { Mul::mul } else { Add::add };
+            row.into_iter().reduce(reduce_func)
+        })
+        .sum::<usize>()
 }
 
 fn part1(input: &str) -> String {
-    solve(input).to_string()
+    temp_solve(input, parse_numbers_part1(input)).to_string()
 }
 
 fn part2(input: &str) -> String {
-    todo!()
+    temp_solve(input, parse_numbers_part2(input)).to_string()
 }
 
 fn main() -> Result<()> {
@@ -73,6 +92,6 @@ mod tests {
 
     #[test]
     fn part2_example() {
-        assert_eq!(part2(EXAMPLE), "TODO");
+        assert_eq!(part2(EXAMPLE), "3263827");
     }
 }
